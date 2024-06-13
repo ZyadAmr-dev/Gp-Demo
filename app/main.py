@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from routes.recipe import router
+from database.database import get_db
 
 app = FastAPI()
 
 app.include_router(router)
-
 
 # if __name__ == "__main__":
 #     import uvicorn
