@@ -1,11 +1,26 @@
-from typing import Any, Collection, Dict
+from typing import Any, Dict, List
 from bson import ObjectId
-import os
 from fastapi.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorCollection
 from fastapi import HTTPException, UploadFile
 import uuid
-from utils.img import resize_image
+from img import resize_image
+
+
+async def get_recipes(db: AsyncIOMotorCollection, filters: Dict[str, Any]) -> List[Dict[str, Any]]:
+    recipes_cursor = db.recipes.find(filters)
+    recipes = await recipes_cursor.to_list(length=100)
+    return recipes
+
+async def get_recipe_by_id(recipe_id: str, db: AsyncIOMotorCollection) -> Dict[str, Any]:
+    recipe = await db.recipes.find_one({"_id": ObjectId(recipe_id)})
+    return recipe
+
+async def create_recipe(recipe_data: Dict[str, Any], db: AsyncIOMotorCollection) -> Dict[str, Any]:
+    result = await db.recipes.insert_one(recipe_data)
+    recipe_data['_id'] = str(result.inserted_id)
+    return recipe_data
+
 
 async def update_recipe(recipe_id: str, update_data: Dict[str, Any], db: AsyncIOMotorCollection) -> object:
     recipe_data = {key: value for key, value in update_data.items() if value is not None}

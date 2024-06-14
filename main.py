@@ -1,6 +1,5 @@
 from fastapi import FastAPI
-from routes.recipe import router
-from database.database import get_db
+from routes import router
 
 app = FastAPI()
 

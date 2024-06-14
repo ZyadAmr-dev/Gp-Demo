@@ -1,6 +1,19 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import List, Optional
 from bson import ObjectId
+
+class Recipe(BaseModel):
+    id: str
+    name: str
+    category: str
+    ingredients: List[str]
+    instructions: str
+
+class CreateRecipe(BaseModel):
+    name: str
+    category: str
+    ingredients: List[str]
+    instructions: str
 
 class PyObjectId(ObjectId):
     @classmethod
